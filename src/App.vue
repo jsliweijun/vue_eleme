@@ -13,12 +13,14 @@
         <router-link to='/seller'>商家</router-link>
       </div>
     </div>
+    <!-- 展示 商品，评价，商家 三大组件信息 -->
     <router-view></router-view>
   </div>
 </template>
 
 <script>
 import Header from "./components/header/Header";
+//现在做静态页面，数据都静态化，不调服务取。
 import MyData from "./data.js";
 
 export default {
@@ -29,18 +31,18 @@ export default {
   data(){
     return {
       seller:{}
-    }
+    }; 
   },
   created(){
 
     this.seller= MyData.seller;
     // 使用 vue-resource 插件调服务
-  //   this.$http.get('/api/seller').then(response => {
-  //   this.seller = response.body.data;
-  //   // custom console
-  //   Console.log(this.seller);
-   
-  // })
+    //   this.$http.get('/api/seller').then(response => {
+    //   this.seller = response.body.data;
+    //   // custom console
+    //   console.log(this.seller);
+
+    // })
   }
 };
 </script>
