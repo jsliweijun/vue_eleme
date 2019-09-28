@@ -27,3 +27,7 @@ npm run lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+### 远程仓库
+
+* <https://github.com/liweijunfox/vue_eleme.git>
