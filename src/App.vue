@@ -19,6 +19,7 @@
 
 <script>
 import Header from "./components/header/Header";
+import MyData from "./data.js";
 
 export default {
   name: "app",
@@ -32,13 +33,14 @@ export default {
   },
   created(){
 
+    this.seller= MyData.seller;
     // 使用 vue-resource 插件调服务
-    this.$http.get('/api/seller').then(response => {
-    this.seller = response.body.data;
-    // custom console
-    Console.log(this.seller);
-
-  })
+  //   this.$http.get('/api/seller').then(response => {
+  //   this.seller = response.body.data;
+  //   // custom console
+  //   Console.log(this.seller);
+   
+  // })
   }
 };
 </script>
