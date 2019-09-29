@@ -47,7 +47,8 @@ export default {
 };
 </script>
 
-<style lang="stylus" scoped>
+<style lang="stylus">
+@import "./common/stylus/icon";
 .tab {
   display: flex;
   width: 100%;
