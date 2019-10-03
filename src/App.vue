@@ -19,9 +19,10 @@
 </template>
 
 <script>
-import Header from "./components/header/Header";
 //现在做静态页面，数据都静态化，不调服务取。
-import MyData from "./data.js";
+import MyData from "./mock/data.js";
+
+import Header from "./components/header/Header";
 
 export default {
   name: "app",

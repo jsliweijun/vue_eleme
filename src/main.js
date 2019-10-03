@@ -5,6 +5,7 @@ import VueResource from 'vue-resource';
 //import './common/stylus/icon.styl';
 import './common/css/iconfonts.css';
 import './common/css/base.css';
+import './common/css/reset.css';
 //import axios from 'axios';
 //import VueAxios from 'vue-axios'; 
 
