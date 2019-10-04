@@ -18,12 +18,22 @@
           <span class="text">{{seller.supports[0].description}}</span>
         </div>
       </div>
+      <!-- 5个> -->
       <div class="support-count" v-if="seller.supports">  
         <span class="count">{{seller.supports.length}}个</span>
         <i class="icon-keyboard_arrow_right"></i>
       </div>
     </div>
-    <div class="bulletin-wapper"></div>
+    <!-- 公告 -->
+    <div class="bulletin-wapper">
+      <span class="bulletin-title"></span>
+      <span class="bulletin-text">{{seller.bulletin}}</span>
+      <i class="icon-keyboard_arrow_right"></i>
+    </div>
+    <!-- 背景 -->
+    <div class="background">
+      <img :src="seller.avatar" width="100%"  height="100%">
+    </div>
   </div>
 </template>
 
@@ -48,8 +58,9 @@ export default {
 @import "../../common/stylus/mixin";
 
 .header
+  position relative
   color: #fff
-  background: #999
+  background rgba(7,17,27,0.5)
   .content-wapper
     position relative
     padding: 24px 12px 18px 24px
@@ -115,8 +126,51 @@ export default {
       .count
         font-size 10px
       .icon-keyboard_arrow_right
-        font-size 10px  
+        font-size 10px
+  .bulletin-wapper
+    position relative
+    height 28px
+    line-height 28px
+    padding 0 22px 0 12px
+    white-space nowrap
+    overflow hidden
+    text-overflow ellipsis
+    background-color rgba(7,17,27,0.2)
+    .bulletin-title
+      margin-top 7px
+      vertical-align top
+      display inline-block
+      width 22px
+      height 12px
+      bg-image('bulletin')
+      background-size 22px 12px
+      background-repeat no-repeat
+    .bulletin-text
+      vertical-align top
+      margin 0 4px
+      font-size 10px
+      line-height: 24px;
+    .icon-keyboard_arrow_right
+      position absolute
+      right 12px
+      top 6px
+      font-size 10px
+  .background
+    position absolute
+    top 0
+    left 0
+    width 100%
+    height 100%
+    z-index -1
+    filter blur(10px)
 
 
 
-</style>>
+
+    
+
+
+
+
+
+</style>
