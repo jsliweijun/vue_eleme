@@ -15,7 +15,7 @@
    data () {
      return {
 
-     }
+     };
    },
    props:{
      seller:{
@@ -25,7 +25,7 @@
    components: {
 
    }
- }
+ };
 </script>
 
 <style>
