@@ -32,17 +32,23 @@
                   <div class="price">
                     <span class="now">￥{{food.price}}</span><span class="old" v-show="food.oldPrice">￥{{food.oldPrice}}</span>
                   </div>
+                  <div class="cartcontrol-wrapper">
+                    <Cartcontrol :food="food"></Cartcontrol>
+                  </div>
                 </div>
               </li>
             </ul>
          </li>
        </ul>
      </div>
+     <Shopcart :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></Shopcart>
  </div>
 </template>
 
 <script>
 import BScroll from "better-scroll";
+import Shopcart from "./../shopcart/Shopcart";
+import Cartcontrol from "./../cartcontrol/Cartcontrol";
 import MyData from "./../../mock/data.js";
  export default {
    data () {
@@ -59,7 +65,8 @@ import MyData from "./../../mock/data.js";
      }
    },
    components: {
-
+     Shopcart,
+     Cartcontrol
    },
    created(){
      this.classMap = ["decrease", "discount", "special", "invoice", "guarantee"];
@@ -90,7 +97,7 @@ import MyData from "./../../mock/data.js";
          click:true
        });
        //probeType=3 作用能实时提供滚动的位置
-       this.foodsScroll = new BScroll(this.$refs.foodswrapper,{probeType:3});
+       this.foodsScroll = new BScroll(this.$refs.foodswrapper,{probeType:3,click:true});
        this.foodsScroll.on('scroll',(pos) => {
          this.scrollY=Math.abs(Math.round(pos.y));
        });
@@ -222,7 +229,12 @@ import MyData from "./../../mock/data.js";
           .old
             text-decoration line-through
             font-size 10px
-            color rgb(147,153,159) 
+            color rgb(147,153,159)
+        .cartcontrol-wrapper
+          position absolute
+          right 0
+          bottom 12px
+
 
 
 

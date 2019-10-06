@@ -14,7 +14,7 @@
       </div>
     </div>
     <!-- 展示 商品，评价，商家 三大组件信息 -->
-    <router-view></router-view>
+    <router-view :seller="seller"></router-view>
   </div>
 </template>
 
