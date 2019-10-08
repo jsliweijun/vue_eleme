@@ -1,47 +1,52 @@
 <template>
- <div class="goods">
-     <div class="menu-wrapper"  ref="menuwrapper">
-       <ul>
-         <!-- 内容数据会多行垂直居住，使用table布局是最好的 -->
-         <li v-for="(item,index) in goods" :key="index" class="menu-item" 
-         :class="{'current':currentIndex === index}" @click="selectMenu(index,$event)">
-           <span class="text">
-             <span v-show="item.type>0" class="icon" :class="classMap[item.type]"></span> {{item.name}}
-           </span> 
-         </li>
-       </ul>
-     </div>
-     <!-- 右侧 商品列表 -->
-     <div class="foods-wrapper" ref="foodswrapper">
-       <ul>
-         <li v-for="(item,index) in goods" class="food-list food-list-hook" :key="index">
-           <!-- 每个种类商品 标题 -->
-            <h1 class="title">{{item.name}}</h1>
-            <ul >
-              <!-- 每个商品 -->
-              <li v-for="(food,index) in item.foods" class="food-item border-1px" :key="index">
-                <div class="icon">
-                  <img width="57" height="57" :src="food.icon" >
-                </div>
-                <div class="content">
-                  <h2 class="name">{{food.name}}</h2>
-                  <p class="desc">{{food.description}}</p>
-                  <div class="extra">
-                    <span class="count">月售{{food.sellCount}}份</span><span>好评率{{food.rating}}%</span> 
-                   </div>
-                  <div class="price">
-                    <span class="now">￥{{food.price}}</span><span class="old" v-show="food.oldPrice">￥{{food.oldPrice}}</span>
-                  </div>
-                  <div class="cartcontrol-wrapper">
-                    <Cartcontrol :food="food"></Cartcontrol>
-                  </div>
-                </div>
-              </li>
-            </ul>
-         </li>
-       </ul>
-     </div>
-     <Shopcart :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></Shopcart>
+<div>
+    <div class="goods">
+        <div class="menu-wrapper"  ref="menuwrapper">
+          <ul>
+            <!-- 内容数据会多行垂直居住，使用table布局是最好的 -->
+            <li v-for="(item,index) in goods" :key="index" class="menu-item" 
+            :class="{'current':currentIndex === index}" @click="selectMenu(index,$event)">
+              <span class="text">
+                <span v-show="item.type>0" class="icon" :class="classMap[item.type]"></span> {{item.name}}
+              </span> 
+            </li>
+          </ul>
+        </div>
+        <!-- 右侧 商品列表 -->
+        <div class="foods-wrapper" ref="foodswrapper">
+          <ul>
+            <li  v-for="(item,index) in goods" class="food-list food-list-hook" :key="index">
+              <!-- 每个种类商品 标题 -->
+                <h1 class="title">{{item.name}}</h1>
+                <ul >
+                  <!-- 每个商品 -->
+                  <li @click="selectFood(food,$event)" v-for="(food,index) in item.foods" class="food-item border-1px" :key="index">
+                    <div class="icon">
+                      <img width="57" height="57" :src="food.icon" >
+                    </div>
+                    <div class="content">
+                      <h2 class="name">{{food.name}}</h2>
+                      <p class="desc">{{food.description}}</p>
+                      <div class="extra">
+                        <span class="count">月售{{food.sellCount}}份</span><span>好评率{{food.rating}}%</span> 
+                      </div>
+                      <div class="price">
+                        <span class="now">￥{{food.price}}</span><span class="old" v-show="food.oldPrice">￥{{food.oldPrice}}</span>
+                      </div>
+                      <div class="cartcontrol-wrapper">
+                        <Cartcontrol :food="food"></Cartcontrol>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+            </li>
+          </ul>
+        </div>
+        <Shopcart :select-foods="selectFoods" 
+        :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice">
+        </Shopcart>
+    </div>
+    <Food :food="selectedFood" ref="food"></Food>
  </div>
 </template>
 
@@ -49,6 +54,7 @@
 import BScroll from "better-scroll";
 import Shopcart from "./../shopcart/Shopcart";
 import Cartcontrol from "./../cartcontrol/Cartcontrol";
+import Food from "./../food/Food";
 import MyData from "./../../mock/data.js";
  export default {
    data () {
@@ -56,7 +62,8 @@ import MyData from "./../../mock/data.js";
        goods:[],
        classMap:[],
        listHeight:[],
-       scrollY:0
+       scrollY:0,
+       selectedFood:{}
      };
    },
    props:{
@@ -66,7 +73,8 @@ import MyData from "./../../mock/data.js";
    },
    components: {
      Shopcart,
-     Cartcontrol
+     Cartcontrol,
+     Food
    },
    created(){
      this.classMap = ["decrease", "discount", "special", "invoice", "guarantee"];
@@ -88,9 +96,28 @@ import MyData from "./../../mock/data.js";
          }
        }
        return 0;
+     },
+     selectFoods(){
+       let foods=[];
+       this.goods.forEach((good) => {
+         good.foods.forEach((food)=>{
+           if(food.count){
+             foods.push(food);
+           }
+         })
+       });
+       return foods;
      }
    },
    methods:{
+     selectFood(food,event){
+       if(!event._constructed){
+         return;
+       }
+       this.selectedFood=food;
+       //调用子组件的方法
+       this.$refs.food.show();
+     },
      _initScroll(){
        //获取dom，使用$refs
        this.menuScroll = new BScroll(this.$refs.menuwrapper,{
