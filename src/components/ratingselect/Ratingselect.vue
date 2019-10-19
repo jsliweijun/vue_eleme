@@ -20,7 +20,8 @@ const ALL = 2;
  export default {
    data () {
      return {
-
+         tempSelectType:2,
+         tempOnlyContent:false
      }
    },
    methods:{
@@ -28,15 +29,15 @@ const ALL = 2;
            if(!event._constructed){
                return;
            }
-           this.selectType=type;
-          // this.$dispatch('ratingtype.select',type);
+           this.tempSelectType=type;
+           this.$store.dispatch('ratingtype.select',type);
        },
        toggleContent(event){
             if(!event._constructed){
                         return;
             }
-            this.onlyContent = ! this.onlyContent;
-           // this.$dispatch('content.toggle',this.onlyContent);
+            this.tempOnlyContent = ! this.tempOnlyContent;
+            this.$store.dispatch('content.toggle',this.onlyContent);
        }
    },
    computed:{
@@ -49,6 +50,14 @@ const ALL = 2;
            return this.ratings.filter((rating) => {
                return rating.rateType === NEGATIVE;
            })
+       },
+       selectType(){
+           console.log(this.tempSelectType);
+           return this.tempSelectType;
+       },
+       onlyContent(){
+           console.log(this.tempOnlyContent);
+           return this.tempOnlyContent;
        }
    },
    components: {
@@ -61,14 +70,14 @@ const ALL = 2;
                return [];
            }
        },
-       selectType:{
-           type:Number,
-           default:ALL
-       },
-       onlyContent:{
-           tyoe:Boolean,
-           default:false
-       },
+    //    selectType:{
+    //        type:Number,
+    //        default:ALL
+    //    },
+    //    onlyContent:{
+    //        tyoe:Boolean,
+    //        default:false
+    //    },
        desc:{
            type:Object,
            default(){
