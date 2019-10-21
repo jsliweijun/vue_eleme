@@ -33,7 +33,7 @@
             <h1 class="title">商品评价</h1>
             <div class="ratingselect-wrapper">
                 <Ratingselect :ratings="food.ratings" :desc="desc" :selectType="selectType"  
-                :onlyContent="onlyContent"></Ratingselect>
+                :onlyContent="onlyContent" @ratingtypeSelect="ratingtypeSelect"  @contentToggle="contentToggle" ></Ratingselect>
                 <div class="rating-wrapper">
                     <ul v-show="food.ratings && food.ratings.length">
                         <li v-show="needShow(rating.rateType,rating.text)" v-for="(rating,index) in food.ratings" :key="index" class="rating-item">
@@ -41,14 +41,14 @@
                                 <span class="name">{{rating.username}}</span>
                                 <img class="avatar" :src="rating.avatar" width="12" height="12">
                             </div>
-                            <div class="time">{{rating.rateTime}}</div>
+                            <div class="time">{{rating.rateTime }}</div>
                             <p class="text">
                                 <span :class="{'icon-thumb_up':rating.rateType === 0,'icon-thumb_down':rating.rateType === 1}"></span>
                                 {{rating.text}}
                             </p>
                         </li>
                     </ul>
-                    <div class="no-rating" v-show="! food.ratings || !food.ratings.length"></div>
+                    <div class="no-rating" v-show="!food.ratings || !food.ratings.length">暂无评价</div>
                 </div>
             </div>
         </div>
@@ -59,6 +59,7 @@
 <script>
 import Vue from "vue";
 import BScroll from "better-scroll";
+import { formatDate } from "./../../common/js/date";
 import Cartcontrol from "./../cartcontrol/Cartcontrol";
 import Ratingselect from "./../ratingselect/Ratingselect";
 import Split from "./../split/Split";
@@ -89,15 +90,36 @@ const ALL = 2;
            type:Object
        }
    },
-   event:{
-       'ratingtype.select'(type){
-           this.selectType=type;
-       },
-       'content.tottle'(onlyContent){
-           this.onlyContent=onlyContent;
-       }
-   },
+//    event:{
+//        'ratingtype.select'(type){
+//            this.selectType=type;
+//        },
+//        'content.tottle'(onlyContent){
+//            this.onlyContent=onlyContent;
+//        }
+//    },
+    filters:{
+        formatDate(time){
+            let date= new Date(time);
+            return formatDate(date,'yyyy-MM-dd hh:mm');
+        }
+    },
    methods:{
+       ratingtypeSelect(type){
+           console.log("ratingtypeSelect",type);
+           this.selectType=type;
+           this.$nextTick(()=>{
+                this.bscroll.refresh();
+           })
+           
+       },
+       contentToggle(onlyContent){
+           console.log("contentToggle",onlyContent);
+           this.onlyContent=onlyContent;
+           this.$nextTick(()=>{
+                this.bscroll.refresh();
+           })
+       },
        needShow(type,text){
            if(this.onlyContent && !text){
                return false;
@@ -268,6 +290,10 @@ const ALL = 2;
                         color rgb(0,160,220)
                     .icon-thumb_down
                         color rgb(147,153,159)
+            .no-rating
+                padding 16px 0
+                font-size 12px
+                color rgb(147,153,159)
 
 
 

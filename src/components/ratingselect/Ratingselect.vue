@@ -1,11 +1,11 @@
 <template>
  <div class="ratingselect">
      <div class="rating-type border-1px">
-         <span @click="select(2,$event)"  class="block positive" :class="{'active':selectType===2}">{{desc.all}} <span class="count">{{ratings.length}}</span> </span>
-         <span @click="select(1,$event)" class="block positive" :class="{'active':selectType===1}">{{desc.positive}} <span class="count">{{positives.length}}</span></span>
-         <span @click="select(0,$event)" class="block negative" :class="{'active':selectType===0}">{{desc.negative}} <span class="count">{{negatives.length}}</span></span>
+         <span @click="select(2,$event)"  class="block positive" :class="{'active':tempSelectType===2}">{{desc.all}} <span class="count">{{ratings.length}}</span> </span>
+         <span @click="select(0,$event)" class="block positive" :class="{'active':tempSelectType===0}">{{desc.positive}} <span class="count">{{positives.length}}</span></span>
+         <span @click="select(1,$event)" class="block negative" :class="{'active':tempSelectType===1}">{{desc.negative}} <span class="count">{{negatives.length}}</span></span>
      </div>
-     <div @click="toggleContent" class="switch" :class="{'on':onlyContent}">
+     <div @click="toggleContent" class="switch" :class="{'on':tempOnlyContent}">
          <span class="icon-check_circle"></span>
          <span class="text">只看有内容的评价  </span>
      </div>
@@ -20,8 +20,8 @@ const ALL = 2;
  export default {
    data () {
      return {
-         tempSelectType:2,
-         tempOnlyContent:false
+         tempSelectType:this.selectType,
+         tempOnlyContent:this.onlyContent
      }
    },
    methods:{
@@ -29,15 +29,19 @@ const ALL = 2;
            if(!event._constructed){
                return;
            }
+           console.log(type);
            this.tempSelectType=type;
-           this.$store.dispatch('ratingtype.select',type);
+          //事件，父组件监听这个事件 this.$store.dispatch('ratingtype.select',type);
+          this.$emit('ratingtypeSelect',type);
        },
        toggleContent(event){
             if(!event._constructed){
                         return;
             }
             this.tempOnlyContent = ! this.tempOnlyContent;
-            this.$store.dispatch('content.toggle',this.onlyContent);
+            //this.$store.dispatch('content.toggle',this.onlyContent);
+            console.log(this.tempOnlyContent);
+            this.$emit('contentToggle',this.tempOnlyContent);
        }
    },
    computed:{
@@ -51,14 +55,14 @@ const ALL = 2;
                return rating.rateType === NEGATIVE;
            })
        },
-       selectType(){
-           console.log(this.tempSelectType);
-           return this.tempSelectType;
-       },
-       onlyContent(){
-           console.log(this.tempOnlyContent);
-           return this.tempOnlyContent;
-       }
+    //    selectType(){
+    //        console.log(this.tempSelectType);
+    //        return this.tempSelectType;
+    //    },
+    //    onlyContent(){
+    //        console.log(this.tempOnlyContent);
+    //        return this.tempOnlyContent;
+    //    }
    },
    components: {
 
@@ -70,14 +74,14 @@ const ALL = 2;
                return [];
            }
        },
-    //    selectType:{
-    //        type:Number,
-    //        default:ALL
-    //    },
-    //    onlyContent:{
-    //        tyoe:Boolean,
-    //        default:false
-    //    },
+       selectType:{
+           type:Number,
+           default:ALL
+       },
+       onlyContent:{
+           tyoe:Boolean,
+           default:false
+       },
        desc:{
            type:Object,
            default(){
