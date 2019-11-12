@@ -1,34 +1,187 @@
 <template>
-<div>
-     <div class="content-wapper">
-       <div class="avatar">
-         <!-- <img :src="seller.avatar" width="64" height="64" alt="" srcset=""> -->
-       </div>
-       <div></div>
-     </div>
-     <div class="bulletin-wapper"></div>
- </div>
+  <!-- better-scroll 的结构 外层固定大小，内层可滚动  -->
+  <div class="seller"  ref="seller" >
+    <div class="seller-content">
+      <div class="overview">
+        <h1 class="title">{{seller.name}}</h1>
+        <div class="desc broder-1px">
+          <Star :size="36" :score="seller.score"></Star>
+          <span class="text">({{seller.ratingCount}})</span>
+          <span class="text">月售{{seller.sellCount}}单</span>
+        </div>
+        <ul class="remark">
+          <li class="block">
+            <h2>起送价</h2>
+            <div class="content">
+              <span class="stress">{{seller.minPrice}}</span>元
+            </div>
+          </li>
+          <li class="block">
+            <h2>商家配送</h2>
+            <div class="content">
+              <span class="stress">{{seller.deliveryPrice}}</span>元
+            </div>
+          </li>
+          <li class="block">
+            <h2>平均配送时间</h2>
+            <div class="content">
+              <span class="stress">{{seller.deliveryTime}}</span>分钟
+            </div>
+          </li>
+        </ul>
+      </div>
+      <Split></Split>
+      <div class="bulletin">
+        <h1 class="title">公告与活动</h1>
+        <div class="content-wrapper">
+          <div class="content">{{seller.bulletin}}</div>
+        </div>
+        <!-- classMap 使用 _2 的图片 -->
+        <ul v-if="seller.supports" class="supports">
+          <li class="support-item border-1px" v-for="(item,index) in seller.supports" :key="index">
+            <span class="icon" :class="classMap[seller.supports[index].type]"></span>
+            <span class="text">{{seller.supports[index].description}}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
- export default {
-   data () {
-     return {
+import BScroll from "better-scroll";
+import Star from "../star/Star";
+import Split from "../split/Split";
+import MyData from "./../../mock/data.js";
 
-     };
-   },
-   props:{
-     seller:{
-       type:Object
-     }
-   },
-   components: {
-
-   }
- };
+export default {
+  data() {
+    return {
+      seller
+    };
+  },
+  props: {
+    // seller: {
+    //   type: Object
+    // }
+  },
+  created() {
+    this.classMap = ["decrease", "discount", "special", "invoice", "guarantee"];
+    this.seller=MyData.seller;
+  },
+  ready(){
+    console.log(this.seller)
+  },
+  watch:{
+    seller(){
+      console.log("1")
+      this._initScroll();
+    }
+  },
+  methods:{
+    _initScroll(){
+      if(!this.scroll){
+         this.bscroll=new BScroll(this.$refs.seller,{click:true});
+      }
+    }
+  },
+  components: {
+    Star,
+    Split
+  }
+};
 </script>
 
-<style>
+<style lang="stylus" scoped>
+@import '../../common/stylus/mixin'
+.seller
+  position absolute
+  top 174px
+  bottom 0
+  left 0
+  width 100%
+  overflow hidden
+  .overview
+    padding 18px
+    .title
+      margin-bottom 8px
+      line-height 14px
+      color rgb(7, 17, 27)
+      font-size 14px
+    .desc
+      padding-bottom 18px
+      line-height 18px
+      border-1px(rgba(7, 17, 27, 0.1))
+      font-size 0
+      .star
+        display inline-block
+        margin-right 8px
+        vertical-align top
+      .text
+        margin-right 12px
+        display inline-block
+        vertical-align top
+        font-size 10px
+        color rgb(77, 85, 93)
+    .remark
+      display flex
+      padding-top 18px
+      .block
+        flex 1
+        text-align center
+        border-right 1px solid rgba(7, 17, 27, 0.2)
+        &:last-child
+          border none
+        h2
+          margin-bottom 4px
+          line-height 10px
+          font-size 10px
+          color rgb(147, 153, 159)
+        .content
+          line-height 24px
+          font-size 10px
+          color rgb(7, 17, 27)
+          .stress
+            font-size 24px
+  .bulletin
+    padding 18px 18px 0 18px
+    .title
+      margin-bottom 8px
+      line-height 14px
+      color rgb(7, 17, 27)
+      font-size 14px
+    .content-wrapper
+      padding 0px 12px 16px 12px
+      border-1px(rgba(7, 17, 27, 0.1))
+      .content
+        line-height 24px
+        font-size 12px
+        color rgb(240, 20, 20)
+    .supports
+      .support-item
+        padding 16px 12px
+        border-1px(rgba(7,17,27,0.1))
+        font-size 0
+      .icon
+        display inline-block
+        vertical-align top
+        width 12px
+        height 12px
+        margin-right 4px
+        background-size 12px 12px
+        background-repeat no-repeat
+        &.decrease
+          bg-image('decrease_4')
+        &.discount
+          bg-image('discount_4')
+        &.guarantee
+          bg-image('guarantee_4')
+        &.invoice
+          bg-image('invoice_4')
+        &.special
+          bg-image('special_4')
+      .text
+        line-height 16px
+        font-size 12px
 
- 
 </style>
