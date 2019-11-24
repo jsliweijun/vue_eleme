@@ -21,7 +21,7 @@
 <script>
 //现在做静态页面，数据都静态化，不调服务取。
 import MyData from "./mock/data.js";
-
+import { urlParse } from "./common/js/util";
 import Header from "./components/header/Header";
 
 export default {
@@ -31,7 +31,13 @@ export default {
   },
   data(){
     return {
-      seller:{}
+      seller:{
+        id:(() => {
+          let queryParam = urlParse();
+          console.log(queryParam);
+          return queryParam.id;
+        })()
+      }
     }; 
   },
   created(){
@@ -40,6 +46,7 @@ export default {
     // 使用 vue-resource 插件调服务
     //   this.$http.get('/api/seller').then(response => {
     //   this.seller = response.body.data;
+    //   this.seller = Object.assign({},)
     //   // custom console
     //   console.log(this.seller);
 
